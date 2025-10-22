@@ -1,0 +1,18 @@
+body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 40px; background: #e3f2fd; color: #333; }
+h1 { text-align: center; font-size: 48px; color: #0d47a1; margin-bottom: 40px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
+h2,h3 { color: #0d47a1; margin-bottom: 10px; }
+.container { display: flex; justify-content: space-between; gap: 20px; }
+.table-section { width: 48%; background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+th { background: #bbdefb; color: #0d47a1; }
+tr:nth-child(even){ background:#e3f2fd; }
+input { padding: 6px; margin-right: 8px; border-radius:5px; border:1px solid #aaa; width:160px; min-width:150px; } /* Placeholder visible */
+button { padding: 6px 12px; cursor: pointer; border: none; background: #1976d2; color: #fff; border-radius: 5px; margin-right:5px; }
+button:hover { background: #0d47a1; }
+.bottom-section { margin-top: 40px; }
+.bottom-container { display: flex; justify-content: space-between; gap: 20px; }
+#simulationWrapper { display: flex; justify-content: center; margin-top: 20px; }
+#simulationTable { width: 95%; border-collapse: collapse; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-radius:10px; overflow:hidden; display:none; }
+#simulationTable th { background: #64b5f6; color: #fff; }
+#simulationTable tr:nth-child(even) { background: #e3f2fd; }
