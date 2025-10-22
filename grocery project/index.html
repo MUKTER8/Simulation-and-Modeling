@@ -1,79 +1,179 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Simulation</title>
-<link rel="stylesheet" href="css/style.css">
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Single-Server Queue Simulation</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <h1>Single-Server Queue Simulation (Grocery)</h1>
 
-<h1>Simulation</h1>
+    <div class="container">
+      <!-- Arrival Time Section -->
+      <div class="table-section">
+        <h2>Arrival Time Table</h2>
+        <div class="input-group">
+          <input
+            type="number"
+            id="arrivalInput"
+            step="0.001"
+            min="0"
+            placeholder="Enter Probability"
+          />
+          <button onclick="addProbability('arrival')">Add</button>
+          <button onclick="resetTable('arrival')">Reset</button>
+        </div>
+        <table id="arrivalTable">
+          <tr>
+            <th>Interval Time</th>
+            <th>Probability</th>
+            <th>Cumulative Probability</th>
+            <th>Random Digit Range</th>
+          </tr>
+        </table>
+      </div>
 
-<!-- MAIN TABLES -->
-<div class="container">
-  <div class="table-section">
-    <h2>Arrival Time Table</h2>
-    <input type="number" id="arrivalInput" step="0.001" min="0" placeholder="Enter Probability">
-    <button onclick="addProbability('arrival')">Add</button>
-    <button onclick="resetTable('arrival')">Reset</button>
-    <table id="arrivalTable">
-      <tr><th>Interval Time</th><th>Probability</th><th>Cumulative Probability</th><th>Random Digit Range</th></tr>
-    </table>
-  </div>
+      <!-- Service Time Section -->
+      <div class="table-section">
+        <h2>Service Time Table</h2>
+        <div class="input-group">
+          <input
+            type="number"
+            id="serviceInput"
+            step="0.001"
+            min="0"
+            placeholder="Enter Probability"
+          />
+          <button onclick="addProbability('service')">Add</button>
+          <button onclick="resetTable('service')">Reset</button>
+        </div>
+        <table id="serviceTable">
+          <tr>
+            <th>Service Time</th>
+            <th>Probability</th>
+            <th>Cumulative Probability</th>
+            <th>Random Digit Range</th>
+          </tr>
+        </table>
+      </div>
+    </div>
 
-  <div class="table-section">
-    <h2>Service Time Table</h2>
-    <input type="number" id="serviceInput" step="0.001" min="0" placeholder="Enter Probability">
-    <button onclick="addProbability('service')">Add</button>
-    <button onclick="resetTable('service')">Reset</button>
-    <table id="serviceTable">
-      <tr><th>Service Time</th><th>Probability</th><th>Cumulative Probability</th><th>Random Digit Range</th></tr>
-    </table>
-  </div>
-</div>
+    <!-- Random Digit Input Section -->
+    <div class="bottom-section">
+      <h2>Random Digits Input</h2>
+      <div class="bottom-container">
+        <div class="table-section">
+          <h3>Random Digits for Arrival</h3>
+          <div class="input-group">
+            <input
+              type="number"
+              id="arrivalRandomInput"
+              placeholder="Enter Random Digit"
+            />
+            <button onclick="addRandomDigit('arrival')">Add</button>
+            <button onclick="resetRandom('arrival')">Reset</button>
+          </div>
+          <div style="overflow-x: auto">
+            <table id="arrivalRandomTable">
+              <tr>
+                <td><strong>No.</strong></td>
+              </tr>
+              <tr>
+                <td><strong>Random Digit</strong></td>
+              </tr>
+            </table>
+          </div>
+        </div>
 
-<!-- RANDOM DIGIT TABLES -->
-<div class="bottom-section">
-  <h2>Random Digits Input</h2>
-  <div class="bottom-container">
-    <div class="table-section">
-      <h3>Random Digits for Arrival Time</h3>
-      <input type="number" id="arrivalRandomInput" placeholder="Enter Random Digit">
-      <button onclick="addRandomDigit('arrival')">Add</button>
-      <button onclick="resetRandom('arrival')">Reset</button>
-      <table id="arrivalRandomTable">
-        <tr><th>No.</th><th>Random Digit</th></tr>
+        <div class="table-section">
+          <h3>Random Digits for Service</h3>
+          <div class="input-group">
+            <input
+              type="number"
+              id="serviceRandomInput"
+              placeholder="Enter Random Digit"
+            />
+            <button onclick="addRandomDigit('service')">Add</button>
+            <button onclick="resetRandom('service')">Reset</button>
+          </div>
+          <div style="overflow-x: auto">
+            <table id="serviceRandomTable">
+              <tr>
+                <td><strong>No.</strong></td>
+              </tr>
+              <tr>
+                <td><strong>Random Digit</strong></td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Simulation Table -->
+    <div style="text-align: center; margin-top: 25px">
+      <button id="genSimBtn" onclick="generateSimulation()">
+        Generate Simulation Table
+      </button>
+      <div id="simulationWrapper">
+        <table id="simulationTable">
+          <tr>
+            <th>Customer</th>
+            <th>Random Digit Arrival</th>
+            <th>IAT</th>
+            <th>AT</th>
+            <th>Random Digit Service Time</th>
+            <th>Service Time</th>
+            <th>Time Service Begin</th>
+            <th>Waiting Time</th>
+            <th>Time Service End</th>
+            <th>Time in System</th>
+            <th>Idle Time</th>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Results Summary -->
+    <div id="resultsWrapper" style="margin-top: 25px; display: none">
+      <h2>Simulation Results</h2>
+      <table id="resultsTable">
+        <tr>
+          <th>Measure</th>
+          <th>Value</th>
+        </tr>
+        <tr>
+          <td>Average Waiting Time (min)</td>
+          <td id="avgWaiting">0</td>
+        </tr>
+        <tr>
+          <td>Probability of Waiting</td>
+          <td id="probWait">0</td>
+        </tr>
+        <tr>
+          <td>Fraction of Idle Time</td>
+          <td id="idleFraction">0</td>
+        </tr>
+        <tr>
+          <td>Average Service Time (min)</td>
+          <td id="avgService">0</td>
+        </tr>
+        <tr>
+          <td>Average Inter-Arrival Time (min)</td>
+          <td id="avgIAT">0</td>
+        </tr>
+        <tr>
+          <td>Average Waiting Time of Those Who Wait (min)</td>
+          <td id="avgWaitWait">0</td>
+        </tr>
+        <tr>
+          <td>Average Time in System (min)</td>
+          <td id="avgSys">0</td>
+        </tr>
       </table>
     </div>
 
-    <div class="table-section">
-      <h3>Random Digits for Service Time</h3>
-      <input type="number" id="serviceRandomInput" placeholder="Enter Random Digit">
-      <button onclick="addRandomDigit('service')">Add</button>
-      <button onclick="resetRandom('service')">Reset</button>
-      <table id="serviceRandomTable">
-        <tr><th>No.</th><th>Random Digit</th></tr>
-      </table>
-    </div>
-  </div>
-</div>
-
-<!-- GENERATE BUTTON & SIMULATION TABLE -->
-<div style="text-align:center; margin-top:20px;">
-  <button id="genSimBtn" onclick="generateSimulation()">Generate Simulation Table</button>
-  <div id="simulationWrapper">
-    <table id="simulationTable">
-      <tr>
-        <th>Customer</th><th>Random Digit Arrival</th><th>IAT</th><th>AT</th>
-        <th>Random Digit Service Time</th><th>Service Time</th>
-        <th>Time Service Begin</th><th>Waiting Time</th>
-        <th>Time Service End</th><th>Time Spent in System</th><th>IOS</th>
-      </tr>
-    </table>
-  </div>
-</div>
-
-<script src="js/script.js"></script>
-</body>
+    <script src="js/script.js"></script>
+  </body>
 </html>
