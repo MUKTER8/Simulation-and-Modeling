@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Single-Server Queue Simulation</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <h1 id="title">
+      <span>Single-Server</span>
+      <span>Queue</span>
+      <span>Simulation</span>
+      <span>(Grocery)</span>
+    </h1>
+    <div class="container">
+      <!-- Arrival Time Section -->
+      <div class="table-section">
+        <h2>Arrival Time Table</h2>
+        <div class="input-group">
+          <input
+            type="number"
+            id="arrivalInput"
+            step="0.001"
+            min="0"
+            placeholder="Enter Probability"
+          />
+          <button onclick="addProbability('arrival')">Add</button>
+          <button onclick="resetTable('arrival')">Reset</button>
+        </div>
+        <table id="arrivalTable">
+          <tr>
+            <th>Interval Time</th>
+            <th>Probability</th>
+            <th>Cumulative Probability</th>
+            <th>Random Digit Range</th>
+          </tr>
+        </table>
+      </div>
+
+      <!-- Service Time Section -->
+      <div class="table-section">
+        <h2>Service Time Table</h2>
+        <div class="input-group">
+          <input
+            type="number"
+            id="serviceInput"
+            step="0.001"
+            min="0"
+            placeholder="Enter Probability"
+          />
+          <button onclick="addProbability('service')">Add</button>
+          <button onclick="resetTable('service')">Reset</button>
+        </div>
+        <table id="serviceTable">
+          <tr>
+            <th>Service Time</th>
+            <th>Probability</th>
+            <th>Cumulative Probability</th>
+            <th>Random Digit Range</th>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- ONE INPUT to add customers and auto-update -->
+    <div class="bottom-section">
+      <div class="table-section" style="width: 100%">
+        <div class="input-group" style="width: 100%">
+          <h2>Simulation Controls</h2>
+          <input
+            type="number"
+            id="customersToAdd"
+            min="1"
+            placeholder="Customers to add (e.g., 5). Press Enter."
+          />
+          <button onclick="addCustomers()">Add</button>
+          <button onclick="resetSimulation()">Reset Simulation</button>
+          <span class="muted" id="statusMsg"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Simulation Table (NO random-digit columns) -->
+    <div id="simulationWrapper">
+      <table id="simulationTable">
+        <tr>
+          <th>Customer</th>
+          <th>Random Digit (Arrival)</th>
+          <th>IAT</th>
+          <th>AT</th>
+          <th>Random Digit (Service)</th>
+          <th>Service Time</th>
+          <th>Time Service Begin</th>
+          <th>Waiting Time</th>
+          <th>Time Service End</th>
+          <th>Time in System</th>
+          <th>Idle Time</th>
+        </tr>
+      </table>
+    </div>
+
+    <!-- Results Summary -->
+    <div id="resultsWrapper" style="margin-top: 25px; display: none">
+      <h2>Simulation Results</h2>
+      <table id="resultsTable">
+        <tr>
+          <th>Measure</th>
+          <th>Value</th>
+        </tr>
+        <tr>
+          <td>Average Waiting Time (min)</td>
+          <td id="avgWaiting">0</td>
+        </tr>
+        <tr>
+          <td>Probability of Waiting</td>
+          <td id="probWait">0</td>
+        </tr>
+        <tr>
+          <td>Fraction of Idle Time</td>
+          <td id="idleFraction">0</td>
+        </tr>
+        <tr>
+          <td>Average Service Time (min)</td>
+          <td id="avgService">0</td>
+        </tr>
+        <tr>
+          <td>Average Inter-Arrival Time (min)</td>
+          <td id="avgIAT">0</td>
+        </tr>
+        <tr>
+          <td>Average Waiting Time of Those Who Wait (min)</td>
+          <td id="avgWaitWait">0</td>
+        </tr>
+        <tr>
+          <td>Average Time in System (min)</td>
+          <td id="avgSys">0</td>
+        </tr>
+      </table>
+    </div>
+
+    <script src="js/script.js"></script>
+  </body>
+</html>

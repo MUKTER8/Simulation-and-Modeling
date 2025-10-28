@@ -1,0 +1,245 @@
+/* GLOBAL STYLES */
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  margin: 30px;
+  background: #f4f7fa;
+  color: #333;
+}
+
+/* MAIN TITLE */
+#title {
+  font-size: 48px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  display: flex;
+  justify-content: center; /* center horizontally */
+  flex-wrap: wrap; /* center long text */
+  width: 100%;
+  margin: 40px auto;
+  text-align: center;
+}
+
+#title span {
+  display: inline-block;
+  transition: transform 0.2s, color 0.3s;
+}
+
+#title span:hover {
+  transform: translateY(-10px);
+  color: #3949ab;
+}
+
+/* SUBHEADINGS */
+h2,
+h3 {
+  color: #1a237e;
+  margin-bottom: 12px;
+}
+
+/* BOTTOM SECTION */
+.bottom-section {
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* FLEX CONTAINERS */
+.container,
+.bottom-section .table-section,
+.bottom-container {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+/* TABLE SECTIONS */
+.table-section {
+  width: 48%;
+  background: #ffffff;
+  padding: 22px 25px;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+}
+
+.table-section:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+}
+
+.bottom-section .table-section {
+  width: 100%;
+}
+
+/* INPUT GROUP */
+.input-group {
+  margin-bottom: 12px;
+}
+
+.muted {
+  font-size: 0.9rem;
+  color: #5f6368;
+  margin-left: 8px;
+}
+
+/* TABLE STYLING */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  font-size: 0.95rem;
+  table-layout: fixed;
+}
+
+th,
+td {
+  border: 1px solid #ccc;
+  padding: 10px 6px;
+  text-align: center;
+  word-wrap: break-word;
+}
+
+th {
+  background: #3949ab;
+  color: #fff;
+  font-weight: 600;
+}
+
+tr:nth-child(even) {
+  background: #f1f5f9;
+}
+
+tr:hover {
+  background: #e8eaf6;
+}
+
+/* INPUTS + BUTTONS */
+input {
+  padding: 8px 10px;
+  margin-right: 8px;
+  border-radius: 6px;
+  border: 1px solid #aaa;
+  width: 240px;
+  min-width: 160px;
+  font-size: 0.95rem;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+input:focus {
+  border-color: #3949ab;
+  box-shadow: 0 0 5px rgba(63, 81, 181, 0.3);
+  outline: none;
+}
+
+button {
+  padding: 8px 16px;
+  cursor: pointer;
+  border: none;
+  background: #3949ab;
+  color: #fff;
+  border-radius: 6px;
+  margin-right: 5px;
+  font-size: 0.95rem;
+  transition: background 0.2s, transform 0.2s;
+}
+
+button:hover {
+  background: #303f9f;
+  transform: translateY(-1px);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+.bottom-section .input-group {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* SIMULATION TABLE */
+#simulationWrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 25px;
+  overflow-x: auto;
+}
+
+#simulationTable {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 14px;
+  overflow: hidden;
+  font-size: 0.92rem;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+#simulationTable th {
+  background: #1a237e;
+  color: #fff;
+  font-weight: 600;
+}
+
+#simulationTable tr:nth-child(even) {
+  background: #f1f5f9;
+}
+
+#simulationTable tr:hover {
+  background: #c1d8c2;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+}
+
+/* RESULTS TABLE */
+#resultsTable {
+  width: 60%;
+  margin: 0 auto;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+#resultsTable th,
+#resultsTable td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: center;
+}
+
+#resultsTable th {
+  background: #3949ab;
+  color: #fff;
+}
+
+/* RESPONSIVE DESIGN */
+@media screen and (max-width: 900px) {
+  .table-section {
+    width: 100%;
+  }
+
+  input {
+    width: 100%;
+    margin-bottom: 8px;
+  }
+
+  button {
+    margin-bottom: 8px;
+  }
+
+  #resultsTable {
+    width: 100%;
+  }
+}
+
+/* SECTION TITLES */
+.table-section h2,
+.table-section h3 {
+  text-align: center;
+  width: 100%;
+}
