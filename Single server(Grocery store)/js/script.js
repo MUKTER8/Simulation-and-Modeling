@@ -1,182 +1,140 @@
 let arrivalData = [];
 let serviceData = [];
-let arrivalRandoms = []; // length = totalCustomers - 1
-let serviceRandoms = []; // length = totalCustomers
+let arrivalRandoms = [];
+let serviceRandoms = [];
 
-// ===== Helpers =====
-function formatNumber(num) {
-  if (num === null || num === undefined) return "";
-  return parseFloat(num.toFixed(3)).toString();
+// ===== Generate Random Probabilities =====
+function generateProbabilities(count, decimals) {
+  let randoms = [];
+  for (let i = 0; i < count; i++) randoms.push(Math.random());
+  let sum = randoms.reduce((a, b) => a + b, 0);
+  let probs = randoms.map((r) => parseFloat((r / sum).toFixed(decimals)));
+
+  // Adjust rounding error to make sure sum = 1
+  let total = probs.reduce((a, b) => a + b, 0);
+  let diff = 1 - total;
+  probs[probs.length - 1] = parseFloat(
+    (probs[probs.length - 1] + diff).toFixed(decimals)
+  );
+  return probs;
 }
 
-function addProbability(type) {
-  const input = document.getElementById(type + "Input");
-  let value = parseFloat(input.value);
-  if (isNaN(value) || value <= 0) return;
-
-  const data = type === "arrival" ? arrivalData : serviceData;
+// ===== Build Table =====
+function buildTable(data, type, scale) {
   const table = document.getElementById(type + "Table");
-  const scale = type === "arrival" ? 1000 : 100;
+  table.innerHTML = `<tr>
+    <th>${type === "arrival" ? "Interval" : "Service"}</th>
+    <th>Probability</th>
+    <th>Cumulative Probability</th>
+    <th>Random Digit Range</th>
+  </tr>`;
 
-  const prevCum = data.length === 0 ? 0 : data[data.length - 1].cumulative;
-  const cumulative = prevCum + value;
+  let cumulative = 0;
+  data.length = 0;
 
-  if (cumulative > 1 + 1e-9) {
-    alert(
-      "Total probability cannot exceed 1. Current total would be " +
-        cumulative.toFixed(3)
+  const probs = generateProbabilities(
+    customerCount,
+    type === "arrival" ? 3 : 2
+  );
+
+  for (let i = 0; i < probs.length; i++) {
+    cumulative += probs[i];
+    const start = i === 0 ? 1 : parseInt(data[i - 1].range.split("-")[1]) + 1;
+    let end = Math.round(cumulative * scale);
+    if (end < start) end = start;
+
+    data.push({ prob: probs[i], cumulative, range: `${start}-${end}` });
+
+    const row = table.insertRow(-1);
+    row.insertCell(0).textContent = i + 1;
+    row.insertCell(1).textContent = probs[i].toFixed(
+      type === "arrival" ? 3 : 2
     );
-    return;
+    row.insertCell(2).textContent = cumulative.toFixed(
+      type === "arrival" ? 3 : 2
+    );
+    row.insertCell(3).textContent = `${start}-${end}`;
   }
-
-  input.value = "";
-
-  const rangeStart =
-    data.length === 0
-      ? 1
-      : parseInt(data[data.length - 1].range.split("-")[1]) + 1;
-
-  let rangeEnd = Math.round(cumulative * scale);
-  if (rangeEnd < rangeStart) rangeEnd = rangeStart;
-
-  data.push({ prob: value, cumulative, range: `${rangeStart}-${rangeEnd}` });
-
-  const row = table.insertRow(-1);
-  row.insertCell(0).textContent = data.length;
-  row.insertCell(1).textContent = formatNumber(value);
-  row.insertCell(2).textContent = formatNumber(cumulative);
-  row.insertCell(3).textContent = `${rangeStart}-${rangeEnd}`;
-
-  // re-run simulation if we already have customers
-  if (serviceRandoms.length > 0) updateSimulation();
 }
 
-function resetTable(type) {
-  if (type === "arrival") arrivalData = [];
-  else serviceData = [];
-  const table = document.getElementById(type + "Table");
-  table.innerHTML = `<tr><th>${
-    type === "arrival" ? "Interval Time" : "Service Time"
-  }</th><th>Probability</th><th>Cumulative Probability</th><th>Random Digit Range</th></tr>`;
-
-  if (serviceRandoms.length > 0) updateSimulation();
-}
-
-// ===== Customers & Randoms =====
-function addCustomers() {
+// ===== Auto Simulation =====
+let customerCount = 0;
+function startAutoSimulation() {
   const input = document.getElementById("customersToAdd");
-  const addCount = parseInt(input.value, 10);
-  if (isNaN(addCount) || addCount <= 0) {
-    alert("Enter a valid positive number of customers to add.");
+  customerCount = parseInt(input.value, 10);
+  if (isNaN(customerCount) || customerCount <= 0) {
+    alert("Enter a valid number of customers.");
     return;
   }
 
-  // generate arrival and service random digits
-  // arrival: only for customers after the very first overall customer
-  const firstOverall = serviceRandoms.length === 0; // starting from empty
+  // Generate tables automatically
+  buildTable(arrivalData, "arrival", 1000);
+  buildTable(serviceData, "service", 100);
 
-  for (let i = 0; i < addCount; i++) {
-    // For arrival, add a random only if this is not the first overall customer
-    if (!(firstOverall && i === 0)) {
-      arrivalRandoms.push(Math.floor(Math.random() * 1000) + 1); // 1..1000
-    }
-    serviceRandoms.push(Math.floor(Math.random() * 100) + 1); // 1..100
+  // Generate random digits for customers
+  arrivalRandoms = [];
+  serviceRandoms = [];
+
+  for (let i = 0; i < customerCount; i++) {
+    if (i > 0) arrivalRandoms.push(Math.floor(Math.random() * 1000) + 1);
+    serviceRandoms.push(Math.floor(Math.random() * 100) + 1);
   }
 
-  input.value = "";
   document.getElementById(
     "statusMsg"
-  ).textContent = `Total customers: ${serviceRandoms.length}`;
-
+  ).textContent = `Total customers: ${customerCount}`;
   updateSimulation();
 }
 
+// ===== Reset =====
 function resetSimulation() {
+  arrivalData = [];
+  serviceData = [];
   arrivalRandoms = [];
   serviceRandoms = [];
-  document.getElementById("statusMsg").textContent = "";
-  const table = document.getElementById("simulationTable");
-  table.innerHTML = `<tr>
-    <th>Customer</th>
-    <th>IAT</th>
-    <th>AT</th>
-    <th>Service Time</th>
-    <th>Time Service Begin</th>
-    <th>Waiting Time</th>
-    <th>Time Service End</th>
-    <th>Time in System</th>
-    <th>Idle Time</th>
+  document.getElementById(
+    "arrivalTable"
+  ).innerHTML = `<tr><th>Interval</th><th>Probability</th><th>Cumulative Probability</th><th>Random Digit Range</th></tr>`;
+  document.getElementById(
+    "serviceTable"
+  ).innerHTML = `<tr><th>Service</th><th>Probability</th><th>Cumulative Probability</th><th>Random Digit Range</th></tr>`;
+  document.getElementById("simulationTable").innerHTML = `<tr>
+    <th>Customer</th><th>Random Digit (Arrival)</th><th>IAT</th><th>AT</th>
+    <th>Random Digit (Service)</th><th>Service Time</th><th>Time Service Begin</th>
+    <th>Waiting Time</th><th>Time Service End</th><th>Time in System</th><th>Idle Time</th>
   </tr>`;
   document.getElementById("resultsWrapper").style.display = "none";
+  document.getElementById("statusMsg").textContent = "";
 }
 
-// ENTER key on the customers input
-document.addEventListener("DOMContentLoaded", () => {
-  const custInput = document.getElementById("customersToAdd");
-  custInput.addEventListener("keypress", (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      addCustomers();
-    }
-  });
+// ===== Mapping =====
+function mapFromRanges(rand, data) {
+  for (let j = 0; j < data.length; j++) {
+    const [start, end] = data[j].range.split("-").map(Number);
+    if (rand >= start && rand <= end) return j + 1;
+  }
+  return 0;
+}
 
-  const probInputs = [
-    { id: "arrivalInput", action: () => addProbability("arrival") },
-    { id: "serviceInput", action: () => addProbability("service") },
-  ];
-  probInputs.forEach(({ id, action }) => {
-    const input = document.getElementById(id);
-    input.addEventListener("keypress", (e) => {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        action();
-      }
-    });
-  });
-});
-
-// ===== Simulation=====
+// ===== Simulation =====
 function updateSimulation() {
   const table = document.getElementById("simulationTable");
   table.innerHTML = `<tr>
-  <th>Customer</th>
-  <th>Random Digit (Arrival)</th>
-  <th>IAT</th>
-  <th>AT</th>
-  <th>Random Digit (Service)</th>
-  <th>Service Time</th>
-  <th>Time Service Begin</th>
-  <th>Waiting Time</th>
-  <th>Time Service End</th>
-  <th>Time in System</th>
-  <th>Idle Time</th>
-</tr>`;
-
-  const totalCustomers = serviceRandoms.length;
-  if (totalCustomers === 0) {
-    document.getElementById("resultsWrapper").style.display = "none";
-    return;
-  }
+    <th>Customer</th><th>Random Digit (Arrival)</th><th>IAT</th><th>AT</th>
+    <th>Random Digit (Service)</th><th>Service Time</th><th>Time Service Begin</th>
+    <th>Waiting Time</th><th>Time Service End</th><th>Time in System</th><th>Idle Time</th>
+  </tr>`;
 
   let cumulativeAT = 0;
   let previousServiceEnd = 0;
 
-  for (let i = 0; i < totalCustomers; i++) {
-    const cust = i + 1;
-
-    // IAT: first customer arrives at time 0; others map from arrivalRandoms[i-1]
-    let iat = 0;
-    let randArr = 0;
-    if (i > 0) {
-      randArr = arrivalRandoms[i - 1] || 0;
-      iat = mapFromRanges(randArr, arrivalData);
-    }
-
+  for (let i = 0; i < customerCount; i++) {
+    let randArr = i > 0 ? arrivalRandoms[i - 1] : 0;
+    let iat = i > 0 ? mapFromRanges(randArr, arrivalData) : 0;
     cumulativeAT += iat;
     const at = cumulativeAT;
 
-    // Service time mapped from serviceRandoms[i]
-    const randServ = serviceRandoms[i] || 0;
+    const randServ = serviceRandoms[i];
     const servTime = mapFromRanges(randServ, serviceData);
 
     const timeServiceBegin = i === 0 ? 0 : Math.max(at, previousServiceEnd);
@@ -187,11 +145,11 @@ function updateSimulation() {
     previousServiceEnd = timeServiceEnd;
 
     const row = table.insertRow(-1);
-    row.insertCell(0).textContent = cust;
-    row.insertCell(1).textContent = randArr; // Random Digit Arrival
+    row.insertCell(0).textContent = i + 1;
+    row.insertCell(1).textContent = randArr;
     row.insertCell(2).textContent = iat;
     row.insertCell(3).textContent = at;
-    row.insertCell(4).textContent = randServ; // Random Digit Service
+    row.insertCell(4).textContent = randServ;
     row.insertCell(5).textContent = servTime;
     row.insertCell(6).textContent = timeServiceBegin;
     row.insertCell(7).textContent = waitingTime;
@@ -203,98 +161,81 @@ function updateSimulation() {
   computeResults();
 }
 
-// map a random digit to row index (1..k) using the built ranges
-function mapFromRanges(rand, data) {
-  // If the probability table doesn't cover the full range, unmatched digits map to 0
-  for (let j = 0; j < data.length; j++) {
-    const [start, end] = data[j].range.split("-").map(Number);
-    if (rand >= start && rand <= end) return j + 1;
-  }
-  return 0;
-}
-
-// ===== KPIs =====
+// ===== Results =====
 function computeResults() {
-  const table = document.getElementById("simulationTable");
+  const rows = document.getElementById("simulationTable").rows;
+  if (rows.length <= 1) return;
+
   let totalWaiting = 0,
-    waitingCustomers = 0;
-  let totalIdle = 0,
+    waitingCustomers = 0,
+    totalIdle = 0,
     totalService = 0,
-    totalIAT = 0;
-  let totalTimeInSystem = 0;
+    totalIAT = 0,
+    totalTimeInSystem = 0;
 
-  for (let i = 1; i < table.rows.length; i++) {
-    const row = table.rows[i];
-    const iat = parseFloat(row.cells[1].textContent);
-    const service = parseFloat(row.cells[3].textContent);
-    const waiting = parseFloat(row.cells[5].textContent);
-    const timeSys = parseFloat(row.cells[7].textContent);
-    const idle = parseFloat(row.cells[8].textContent);
+  for (let i = 1; i < rows.length; i++) {
+    const cells = rows[i].cells;
+    const iat = parseFloat(cells[2].textContent);
+    const serv = parseFloat(cells[5].textContent);
+    const wait = parseFloat(cells[7].textContent);
+    const sys = parseFloat(cells[9].textContent);
+    const idle = parseFloat(cells[10].textContent);
 
-    totalWaiting += waiting;
-    if (waiting > 0) waitingCustomers++;
+    totalWaiting += wait;
+    if (wait > 0) waitingCustomers++;
     totalIdle += idle;
-    totalService += service;
-    totalTimeInSystem += timeSys;
+    totalService += serv;
+    totalTimeInSystem += sys;
     if (i > 1) totalIAT += iat;
   }
 
-  const lastEnd =
-    table.rows.length > 1
-      ? parseFloat(table.rows[table.rows.length - 1].cells[6].textContent)
-      : 0;
-
+  const lastEnd = parseFloat(rows[rows.length - 1].cells[8].textContent);
   document.getElementById("resultsWrapper").style.display = "block";
   document.getElementById("avgWaiting").textContent = (
     totalWaiting /
-    (table.rows.length - 1)
+    (rows.length - 1)
   ).toFixed(2);
   document.getElementById("probWait").textContent = (
     waitingCustomers /
-    (table.rows.length - 1)
+    (rows.length - 1)
   ).toFixed(3);
   document.getElementById("idleFraction").textContent = (
     totalIdle / (lastEnd || 1)
   ).toFixed(3);
   document.getElementById("avgService").textContent = (
     totalService /
-    (table.rows.length - 1)
+    (rows.length - 1)
   ).toFixed(2);
   document.getElementById("avgIAT").textContent = (
-    totalIAT / Math.max(1, table.rows.length - 2)
+    totalIAT / Math.max(1, rows.length - 2)
   ).toFixed(2);
   document.getElementById("avgWaitWait").textContent =
     waitingCustomers > 0 ? (totalWaiting / waitingCustomers).toFixed(2) : 0;
   document.getElementById("avgSys").textContent = (
     totalTimeInSystem /
-    (table.rows.length - 1)
+    (rows.length - 1)
   ).toFixed(2);
 }
+
+// ===== Title Animation =====
 const title = document.getElementById("title");
 const text = title.textContent;
 title.textContent = "";
-
-// Wrap each character in a span
 const chars = text.split("").map((ch) => {
   const span = document.createElement("span");
   span.textContent = ch;
   title.appendChild(span);
   return span;
 });
-
 const colors = ["#3949ab", "#1de9b6", "#f50057", "#ffca28", "#00bcd4"];
 let t = 0;
-
 function waveEffect() {
   chars.forEach((span, i) => {
-    // vertical wave motion
     const y = Math.sin((i + t) / 2) * 10;
     span.style.transform = `translateY(${y}px)`;
-    // color cycling
     span.style.color = colors[(i + Math.floor(t / 3)) % colors.length];
   });
   t += 0.1;
   requestAnimationFrame(waveEffect);
 }
-
 waveEffect();
