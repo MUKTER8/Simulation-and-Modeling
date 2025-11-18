@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Able-Baker Queue Simulation</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <h1 id="title">Able-Baker Queue Simulation</h1>
+
+    <div class="bottom-section">
+      <div class="table-section input-section">
+        <h2>Enter number of customers</h2>
+        <input
+          type="number"
+          id="customersToAdd"
+          min="1"
+          placeholder="Total customers"
+        />
+        <button onclick="startSimulation()">Simulate</button>
+        <button onclick="resetSimulation()">Reset</button>
+      </div>
+    </div>
+
+    <div class="spacer"></div>
+
+    <div id="simulationWrapper">
+      <table id="simulationTable">
+        <tr>
+          <th>Customer</th>
+          <th>IAT</th>
+          <th>Arrival Time</th>
+          <th>Able Begin</th>
+          <th>Able Service</th>
+          <th>Able End</th>
+          <th>Baker Begin</th>
+          <th>Baker Service</th>
+          <th>Baker End</th>
+          <th>Caller Delay</th>
+          <th>Time in System</th>
+        </tr>
+      </table>
+    </div>
+
+    <div id="resultsWrapper" style="margin-top: 20px; display: none">
+      <h2>Simulation Results</h2>
+      <table id="resultsTable">
+        <tr>
+          <th>Measure</th>
+          <th>Value</th>
+        </tr>
+        <tr>
+          <td>Average waiting time</td>
+          <td id="avgWaiting"></td>
+        </tr>
+        <tr>
+          <td>Average IAT</td>
+          <td id="avgIAT"></td>
+        </tr>
+        <tr>
+          <td>Average service time (Able)</td>
+          <td id="avgServiceAble"></td>
+        </tr>
+        <tr>
+          <td>Average service time (Baker)</td>
+          <td id="avgServiceBaker"></td>
+        </tr>
+        <tr>
+          <td>Average waiting time (those who wait)</td>
+          <td id="avgWaitWait"></td>
+        </tr>
+      </table>
+    </div>
+
+    <script src="js/script.js"></script>
+  </body>
+</html>
