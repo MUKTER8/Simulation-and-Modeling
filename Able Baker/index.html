@@ -18,8 +18,10 @@
           min="1"
           placeholder="Total customers"
         />
-        <button onclick="startSimulation()">Simulate</button>
-        <button onclick="resetSimulation()">Reset</button>
+        <div class="button-row">
+          <button id="simulateBtn" onclick="startSimulation()">Simulate</button>
+          <button onclick="resetSimulation()">Reset</button>
+        </div>
       </div>
     </div>
 
@@ -31,6 +33,7 @@
           <th>Customer</th>
           <th>IAT</th>
           <th>Arrival Time</th>
+          <th>Who Served?</th>
           <th>Able Begin</th>
           <th>Able Service</th>
           <th>Able End</th>
