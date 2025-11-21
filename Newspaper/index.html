@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Newspaper Seller Simulation</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Newspaper Seller Simulation</h1>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Simulation Days</label>
+          <input
+            id="days"
+            name="days"
+            type="number"
+            value="20"
+            min="1"
+            step="1"
+            required
+            title="Simulation Days"
+            placeholder="Enter number of days"
+            aria-label="Simulation Days"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="orderQty">Order Quantity</label>
+          <input
+            id="orderQty"
+            type="number"
+            value="70"
+            title="Order Quantity"
+            placeholder="Enter order quantity"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="cost">Cost Price</label>
+          <input
+            id="cost"
+            name="cost"
+            type="number"
+            value="0.33"
+            step="0.01"
+            title="Cost Price"
+            placeholder="Enter cost price"
+            aria-label="Cost Price"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="sell">Selling Price</label>
+          <input
+            id="sell"
+            name="sell"
+            type="number"
+            value="0.50"
+            step="0.01"
+            title="Selling Price"
+            placeholder="Enter selling price"
+            aria-label="Selling Price"
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Lost Profit per Unit</label>
+          <input
+            id="lost"
+            type="number"
+            value="0.17"
+            step="0.01"
+            title="Lost Profit per Unit"
+            placeholder="Enter lost profit per unit"
+            aria-label="Lost Profit per Unit"
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Salvage Value</label>
+          <input
+            id="salvage"
+            type="number"
+            value="0.05"
+            step="0.01"
+            title="Salvage Value"
+            placeholder="Enter salvage value"
+            aria-label="Salvage Value"
+          />
+        </div>
+      </div>
+
+      <button id="simulateBtn">Run Simulation</button>
+
+      <table id="resultTable">
+        <thead>
+          <tr>
+            <th>Day</th>
+            <th>Rnd Type</th>
+            <th>Type</th>
+            <th>Rnd Demand</th>
+            <th>Demand</th>
+            <th>Revenue</th>
+            <th>Lost Profit</th>
+            <th>Salvage</th>
+            <th>Daily Profit</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+
+      <!-- ✅ SUMMARY ADDED HERE -->
+      <div id="summary" class="summary-container">
+        <h2>Simulation Summary</h2>
+        <div class="summary-grid">
+          <div class="summary-item"><span>Total Revenue:</span> <strong id="totalRevenue">$0.00</strong></div>
+          <div class="summary-item"><span>Total Lost Profit:</span> <strong id="totalLost">$0.00</strong></div>
+          <div class="summary-item"><span>Total Salvage:</span> <strong id="totalSalvage">$0.00</strong></div>
+          <div class="summary-item"><span>Total Profit:</span> <strong id="totalProfit">$0.00</strong></div>
+          <div class="summary-item"><span>Average Daily Profit:</span> <strong id="avgProfit">$0.00</strong></div>
+          <div class="summary-item"><span>Good Days:</span> <strong id="countGood">0</strong></div>
+          <div class="summary-item"><span>Fair Days:</span> <strong id="countFair">0</strong></div>
+          <div class="summary-item"><span>Poor Days:</span> <strong id="countPoor">0</strong></div>
+        </div>
+      </div>
+      <!-- END SUMMARY -->
+
+    </div>
+
+    <script src="scripts.js"></script>
+  </body>
+</html>
