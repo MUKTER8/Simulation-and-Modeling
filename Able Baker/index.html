@@ -1,81 +1,82 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Able-Baker Queue Simulation</title>
-    <link rel="stylesheet" href="css/style.css" />
-  </head>
-  <body>
-    <h1 id="title">Able-Baker Queue Simulation</h1>
+<body>
+  <header class="app-header">
+    <h1>Able–Baker Queue Simulation</h1>
+    <p>Two-server discrete event simulation</p>
+  </header>
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="js/script.js"></script>
 
-    <div class="bottom-section">
-      <div class="table-section input-section">
-        <h2>Enter number of customers</h2>
-        <input
-          type="number"
-          id="customersToAdd"
-          min="1"
-          placeholder="Total customers"
-        />
-        <div class="button-row">
-          <button id="simulateBtn" onclick="startSimulation()">Simulate</button>
-          <button onclick="resetSimulation()">Reset</button>
-        </div>
+  <section class="control-card">
+    <h2>Simulation Control</h2>
+    <input
+      type="number"
+      id="customersToAdd"
+      min="1"
+      placeholder="Enter number of customers"
+    />
+    <div class="button-row">
+      <button id="simulateBtn" onclick="startSimulation()">Simulate</button>
+      <button class="secondary" onclick="resetSimulation()">Reset</button>
+    </div>
+  </section>
+
+  <section id="simulationWrapper">
+    <table id="simulationTable">
+      <thead>
+        <tr>
+          <th>Cust</th>
+          <th>IAT</th>
+          <th>Arrival</th>
+          <th>Server</th>
+          <th colspan="3">Able</th>
+          <th colspan="3">Baker</th>
+          <th>Delay</th>
+          <th>System</th>
+        </tr>
+        <tr class="sub-head">
+          <th></th>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th>Begin</th>
+          <th>Svc</th>
+          <th>End</th>
+          <th>Begin</th>
+          <th>Svc</th>
+          <th>End</th>
+          <th></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <section id="resultsWrapper">
+    <h2>Summary</h2>
+    <div class="result-grid">
+      <div class="result-card">
+        <span>Avg Waiting Time</span>
+        <strong id="avgWaiting"></strong>
+      </div>
+      <div class="result-card">
+        <span>Avg IAT</span>
+        <strong id="avgIAT"></strong>
+      </div>
+      <div class="result-card">
+        <span>Avg Able Service</span>
+        <strong id="avgServiceAble"></strong>
+      </div>
+      <div class="result-card">
+        <span>Avg Baker Service</span>
+        <strong id="avgServiceBaker"></strong>
+      </div>
+      <div class="result-card highlight">
+        <span>Avg Wait (Waiting Only)</span>
+        <strong id="avgWaitWait"></strong>
       </div>
     </div>
+  </section>
 
-    <div class="spacer"></div>
-
-    <div id="simulationWrapper">
-      <table id="simulationTable">
-        <tr>
-          <th>Customer</th>
-          <th>IAT</th>
-          <th>Arrival Time</th>
-          <th>Who Served?</th>
-          <th>Able Begin</th>
-          <th>Able Service</th>
-          <th>Able End</th>
-          <th>Baker Begin</th>
-          <th>Baker Service</th>
-          <th>Baker End</th>
-          <th>Caller Delay</th>
-          <th>Time in System</th>
-        </tr>
-      </table>
-    </div>
-
-    <div id="resultsWrapper" style="margin-top: 20px; display: none">
-      <h2>Simulation Results</h2>
-      <table id="resultsTable">
-        <tr>
-          <th>Measure</th>
-          <th>Value</th>
-        </tr>
-        <tr>
-          <td>Average waiting time</td>
-          <td id="avgWaiting"></td>
-        </tr>
-        <tr>
-          <td>Average IAT</td>
-          <td id="avgIAT"></td>
-        </tr>
-        <tr>
-          <td>Average service time (Able)</td>
-          <td id="avgServiceAble"></td>
-        </tr>
-        <tr>
-          <td>Average service time (Baker)</td>
-          <td id="avgServiceBaker"></td>
-        </tr>
-        <tr>
-          <td>Average waiting time (those who wait)</td>
-          <td id="avgWaitWait"></td>
-        </tr>
-      </table>
-    </div>
-
-    <script src="js/script.js"></script>
-  </body>
-</html>
+  <script src="js/script.js"></script>
+</body>
